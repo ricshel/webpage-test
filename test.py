@@ -334,9 +334,88 @@ def render_html(predictions, actual):
 </body>
 </html>"""
 
+def build_predictions_tables(predictions, actual):
+    # columns we’ll use
+    top6_cols = [f"Pos {i}" for i in range(1, 7)]
+    bottom3_cols = [f"Pos {i}" for i in range(18, 21)]  # label however you prefer
+
+    # use the actual keys so everyone lines up to the same set/order
+    cup_cols = list(actual.get("cups", {}).keys())
+    award_cols = list(actual.get("awards", {}).keys())
+
+    def row(cells):
+        tds = "".join(f"<td>{(c if c is not None else '')}</td>" for c in cells)
+        return f"<tr>{tds}</tr>"
+
+    # Top 6 table (rows = names, columns = positions)
+    top6_header = row(["Name"] + top6_cols)
+    top6_body = "\n".join(
+        row([p["name"]] + [p.get("top6", [""]*6)[i] if i < len(p.get("top6", [])) else "" for i in range(6)])
+        for p in predictions
+    )
+    top6_table = f"""
+      <h3 style="margin:12px 0 6px;font-size:16px">Predictions — Top 6</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead>{top6_header}</thead>
+        <tbody>{top6_body}</tbody>
+      </table>
+    """
+
+    # Bottom 3 table
+    bottom3_header = row(["Name"] + bottom3_cols)
+    bottom3_body = "\n".join(
+        row([p["name"]] + [p.get("bottom3", [""]*3)[i] if i < len(p.get("bottom3", [])) else "" for i in range(3)])
+        for p in predictions
+    )
+    bottom3_table = f"""
+      <h3 style="margin:12px 0 6px;font-size:16px">Predictions — Bottom 3</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead>{bottom3_header}</thead>
+        <tbody>{bottom3_body}</tbody>
+      </table>
+    """
+
+    # Cups table (winner picks only; if you later capture runner_up in predictions, add another column)
+    cups_header = row(["Name"] + cup_cols)
+    cups_body = "\n".join(
+        row([p["name"]] + [p.get("cups", {}).get(cup, "") for cup in cup_cols])
+        for p in predictions
+    )
+    cups_table = f"""
+      <h3 style="margin:12px 0 6px;font-size:16px">Predictions — Cups (winner pick)</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead>{cups_header}</thead>
+        <tbody>{cups_body}</tbody>
+      </table>
+    """
+
+    # Awards table
+    awards_header = row(["Name"] + award_cols)
+    awards_body = "\n".join(
+        row([p["name"]] + [p.get("awards", {}).get(aw, "") for aw in award_cols])
+        for p in predictions
+    )
+    awards_table = f"""
+      <h3 style="margin:12px 0 6px;font-size:16px">Predictions — Awards</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
+        <thead>{awards_header}</thead>
+        <tbody>{awards_body}</tbody>
+      </table>
+    """
+
+    return f"""
+    <section style="margin-top:28px">
+      <h2 style="margin:0 0 8px;font-size:18px">Predictions (by person)</h2>
+      {top6_table}
+      {bottom3_table}
+      {cups_table}
+      {awards_table}
+    </section>
+    """
+
 # after scoring:
 ranked = predictions  # or your sorted list if you sort elsewhere
-html = render_html(ranked, actual)
+html = render_html(ranked, actual) + build_predictions_tables(ranked, actual)
 
 # write to dist/index.html for GitHub Pages action
 out = Path("dist")
