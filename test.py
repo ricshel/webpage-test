@@ -39,7 +39,7 @@ predictions = [
             "clean sheets": "alisson",
             "first manager sacked": "parker",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Hickey",
@@ -58,7 +58,7 @@ predictions = [
             "clean sheets": "arsenal",
             "first manager sacked": "parker",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Shelton",
@@ -77,7 +77,7 @@ predictions = [
             "clean sheets": "alisson",
             "first manager sacked": "pereira",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Dave",
@@ -103,7 +103,7 @@ predictions = [
             "clean sheets": "alisson",
             "first manager sacked": "farke",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Rob",
@@ -129,7 +129,7 @@ predictions = [
             "clean sheets": "allison",
             "first manager sacked": "andrews",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Kieron",
@@ -155,7 +155,7 @@ predictions = [
             "clean sheets": "raya",
             "first manager sacked": "amorim",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Ste",
@@ -185,7 +185,7 @@ predictions = [
             "clean sheets": "raya",
             "first manager sacked": "andrews",
         },
-        "score": 0.0,
+        "score": 0,
     },
     {
         "name": "Matt",
@@ -215,7 +215,7 @@ predictions = [
             "clean sheets": "raya",
             "first manager sacked": "howe",
         },
-        "score": 0.0,
+        "score": 0,
     },
 ]
 
