@@ -20,7 +20,6 @@ actual = {
     },
 }
 
-
 predictions = [
     {
         "name": "Richard",
@@ -229,9 +228,7 @@ predictions = score_bottom3(actual, predictions)
 predictions = score_cups_simple(actual, predictions)
 predictions = score_awards_simple(actual, predictions)
 
-from pathlib import Path
-
-def render_single_table(predictions, actual):
+def render_single_table(predictions, actual, include_actual=True, actual_label="Actual"):
     # column sets (use actual keys for consistent ordering)
     cup_cols = list(actual.get("cups", {}).keys())
     award_cols = list(actual.get("awards", {}).keys())
@@ -248,8 +245,25 @@ def render_single_table(predictions, actual):
         style = " style='text-align:right'" if align_right else ""
         return f"<td{style}>{x}</td>"
 
-    # build rows
     body_rows = []
+
+    # Optional "Actual" row at the top
+    if include_actual:
+        actual_top = actual.get("top6", [])
+        actual_bot = actual.get("bottom3", [])
+        actual_cups_winners = [ (actual["cups"].get(c, {}) or {}).get("winner", "") for c in cup_cols ]
+        actual_awards_vals  = [ actual.get("awards", {}).get(a, "") for a in award_cols ]
+
+        cells = []
+        cells.append(td(actual_label))
+        cells.append(td("-", align_right=True))  # no score for the actual row
+        cells += [td(actual_top[i] if i < len(actual_top) else "") for i in range(6)]
+        cells += [td(actual_bot[i] if i < len(actual_bot) else "") for i in range(3)]
+        cells += [td(v) for v in actual_cups_winners]
+        cells += [td(v) for v in actual_awards_vals]
+        body_rows.append("<tr>" + "".join(cells) + "</tr>")
+
+    # Participant rows
     for p in predictions:
         top = p.get("top6", [])
         bot = p.get("bottom3", [])
