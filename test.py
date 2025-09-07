@@ -1,5 +1,6 @@
 from functions import *
 from pathlib import Path
+from datetime import datetime
 
 actual = {
     "top6": ["liverpool", "chelsea", "arsenal", "spurs", "everton", "sunderland"],
@@ -228,7 +229,21 @@ predictions = score_bottom3(actual, predictions)
 predictions = score_cups_simple(actual, predictions)
 predictions = score_awards_simple(actual, predictions)
 
-def render_single_table(predictions, actual, include_actual=True, actual_label="Actual"):
+try:
+    from zoneinfo import ZoneInfo
+    _TZ = ZoneInfo("Europe/London")
+except Exception:
+    _TZ = None
+
+def render_single_table(predictions, actual, include_actual=True, actual_label="Actual", updated_at=None):
+    # figure out the timestamp string
+    if updated_at is None:
+        if _TZ:
+            now = datetime.now(_TZ)
+        else:
+            now = datetime.utcnow()
+        updated_at = now.strftime("%Y-%m-%d %H:%M %Z").strip()
+
     # column sets (use actual keys for consistent ordering)
     cup_cols = list(actual.get("cups", {}).keys())
     award_cols = list(actual.get("awards", {}).keys())
@@ -247,16 +262,16 @@ def render_single_table(predictions, actual, include_actual=True, actual_label="
 
     body_rows = []
 
-    # Optional "Actual" row at the top
+    # "Actual" row
     if include_actual:
         actual_top = actual.get("top6", [])
         actual_bot = actual.get("bottom3", [])
-        actual_cups_winners = [ (actual["cups"].get(c, {}) or {}).get("winner", "") for c in cup_cols ]
-        actual_awards_vals  = [ actual.get("awards", {}).get(a, "") for a in award_cols ]
+        actual_cups_winners = [(actual["cups"].get(c, {}) or {}).get("winner", "") for c in cup_cols]
+        actual_awards_vals  = [actual.get("awards", {}).get(a, "") for a in award_cols]
 
         cells = []
         cells.append(td(actual_label))
-        cells.append(td("-", align_right=True))  # no score for the actual row
+        cells.append(td("-", align_right=True))
         cells += [td(actual_top[i] if i < len(actual_top) else "") for i in range(6)]
         cells += [td(actual_bot[i] if i < len(actual_bot) else "") for i in range(3)]
         cells += [td(v) for v in actual_cups_winners]
@@ -270,26 +285,24 @@ def render_single_table(predictions, actual, include_actual=True, actual_label="
         cups = p.get("cups", {})
         awards = p.get("awards", {})
 
-        row_cells = []
-        row_cells.append(td(p.get("name", "")))
-        row_cells.append(td(int(p.get("score", 0)), align_right=True))
-        row_cells += [td(top[i] if i < len(top) else "") for i in range(6)]
-        row_cells += [td(bot[i] if i < len(bot) else "") for i in range(3)]
-        row_cells += [td(cups.get(c, "")) for c in cup_cols]
-        row_cells += [td(awards.get(a, "")) for a in award_cols]
+        cells = []
+        cells.append(td(p.get("name", "")))
+        cells.append(td(int(p.get("score", 0)), align_right=True))
+        cells += [td(top[i] if i < len(top) else "") for i in range(6)]
+        cells += [td(bot[i] if i < len(bot) else "") for i in range(3)]
+        cells += [td(cups.get(c, "")) for c in cup_cols]
+        cells += [td(awards.get(a, "")) for a in award_cols]
+        body_rows.append("<tr>" + "".join(cells) + "</tr>")
 
-        body_rows.append("<tr>" + "".join(row_cells) + "</tr>")
-
-    # header row
     head = "<tr>" + "".join(f"<th>{h}</th>" for h in headers) + "</tr>"
 
-    # full html
     return f"""<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
 <title>Predictions — Full Table</title>
 <body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:95vw;margin:40px auto;padding:0 16px">
-  <h1 style="margin:0 0 12px">Predictions — Full Table</h1>
+  <h1 style="margin:0 0 6px">Predictions — Full Table</h1>
+  <p style="margin:0 0 16px;color:#555">Last updated: {updated_at}</p>
   <div style="overflow:auto">
     <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;min-width:100%">
       <thead>{head}</thead>
