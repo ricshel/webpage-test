@@ -28,7 +28,7 @@ predictions = [
         "bottom3": ["brentford", "sunderland", "burnley"],
         "cups": {
             "fa cup": "liverpool",
-            "europa league": "aston villa",
+            "europa league": "villa",
             "carabao cup": "manchester united",
             "champions league": "manchester city",
             "conference league": "aek athens",
