@@ -80,7 +80,7 @@ predictions = [
         "score": 0.0,
     },
     {
-        "name": "David",
+        "name": "Dave",
         "top6": [
             "manchester united",
             "chelsea",
@@ -106,7 +106,7 @@ predictions = [
         "score": 0.0,
     },
     {
-        "name": "rob",
+        "name": "Rob",
         "top6": [
             "liverpool",
             "arsenal",
@@ -132,7 +132,7 @@ predictions = [
         "score": 0.0,
     },
     {
-        "name": "kieron",
+        "name": "Kieron",
         "top6": [
             "manchester city",
             "liverpool",
@@ -158,7 +158,7 @@ predictions = [
         "score": 0.0,
     },
     {
-        "name": "ste",
+        "name": "Ste",
         "top6": [
             "arsenal",
             "manchester city",
@@ -188,7 +188,7 @@ predictions = [
         "score": 0.0,
     },
     {
-        "name": "matt",
+        "name": "Matt",
         "top6": [
             "liverpool",
             "arsenal",
