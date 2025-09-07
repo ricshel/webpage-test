@@ -62,8 +62,6 @@ def score_awards_simple(actual, predictions):
             if winner and p.get("awards", {}).get(award, "") == winner:
                 p["score"] += 5
 
-    # cast to int so there are no decimals, then sort desc
-    for p in predictions:
-        p["score"] = int(p.get("score", 0))
-
-    return sorted(predictions, key=lambda p: p["score"], reverse=True)
+    # THIS BIT
+    # return highest → lowest by score
+    return sorted(predictions, key=lambda p: p.get("score", 0), reverse=True)
