@@ -61,7 +61,7 @@ predictions = [
         "score": 0,
     },
     {
-        "name": "Shelton",
+        "name": "Shelton (not playing for cash)",
         "top6": [ "liverpool", "manchester city", "arsenal", "chelsea", "manchester united", "villa" ],
         "bottom3": [ "bournemouth", "leeds", "burnley", ],
         "cups": {
@@ -229,23 +229,47 @@ predictions = score_bottom3(actual, predictions)
 predictions = score_cups_simple(actual, predictions)
 predictions = score_awards_simple(actual, predictions)
 
+from pathlib import Path
+
 def render_html(predictions):
     rows = "\n".join(
-        f"<tr><td>{p['name']}</td><td style='text-align:right'>{p['score']:.1f}</td></tr>"
+        f"<tr><td>{p['name']}</td><td style='text-align:right'>{int(p['score'])}</td></tr>"
         for p in predictions
     )
+    rules = """
+    <section style="margin-top:24px">
+      <h2 style="margin:0 0 8px;font-size:18px">Scoring Rules</h2>
+      <ul style="line-height:1.6;margin:0 0 8px 18px;padding:0">
+        <li><b>Top 6</b>: 10 pts for champions; 5 pts for any other exact position; 2 pts if the team is in the top 6 (wrong spot).</li>
+        <li><b>Bottom 3</b>: 5 pts for exact position; 2 pts if the team is in the bottom 3 (wrong spot).</li>
+        <li><b>Cups</b>: 5 pts for winner; 2 pts for runner-up.</li>
+        <li><b>Awards</b> (Golden Boot, Most Assists, Most Clean Sheets, First Manager Sacked): 5 pts each correct pick.</li>
+      </ul>
+    </section>
+    """
     return f"""<!doctype html>
-<html lang="en"><meta charset="utf-8"><title>Predictions — Scores</title>
-<body style="font-family:system-ui;max-width:700px;margin:40px auto;padding:0 16px">
-  <h1>Predictions — Scores</h1>
+<html lang="en">
+<meta charset="utf-8">
+<title>Predictions — Scores</title>
+<body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:760px;margin:40px auto;padding:0 16px">
+  <h1 style="margin:0 0 12px">Predictions — Scores</h1>
   <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
-    <thead><tr><th>Name</th><th style="text-align:right">Score</th></tr></thead>
-    <tbody>{rows}</tbody>
+    <thead>
+      <tr>
+        <th style="text-align:left">Name</th>
+        <th style="text-align:right">Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows}
+    </tbody>
   </table>
-</body></html>"""
+  {rules}
+</body>
+</html>"""
 
-# after computing:
-# ranked = score_awards_simple(actual, predictions)  # plus your other scorers first
-html = render_html(predictions)  # or ranked, depending on your flow
+# after computing your scores:
+# ranked = score_everything(actual, predictions)  # produce final list with p["score"] as a number
+html = render_html(predictions)  # or use `ranked` if you sorted already
 Path("dist").mkdir(exist_ok=True)
 Path("dist/index.html").write_text(html, encoding="utf-8")
