@@ -335,7 +335,7 @@ def render_html(predictions, actual):
 </html>"""
 
 # usage after computing:
-# ranked = score_everything(actual, predictions)  # your pipeline
-# html = render_html(ranked, actual)
-# Path("dist").mkdir(exist_ok=True)
-# Path("dist/index.html").write_text(html, encoding="utf-8")
+ranked = score_everything(actual, predictions)  # your pipeline
+html = render_html(ranked, actual)
+Path("dist").mkdir(exist_ok=True)
+Path("dist/index.html").write_text(html, encoding="utf-8")
