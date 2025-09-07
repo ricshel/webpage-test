@@ -334,8 +334,11 @@ def render_html(predictions, actual):
 </body>
 </html>"""
 
-# usage after computing:
-ranked = score_everything(actual, predictions)  # your pipeline
+# after scoring:
+ranked = predictions  # or your sorted list if you sort elsewhere
 html = render_html(ranked, actual)
-Path("dist").mkdir(exist_ok=True)
-Path("dist/index.html").write_text(html, encoding="utf-8")
+
+# write to dist/index.html for GitHub Pages action
+out = Path("dist")
+out.mkdir(parents=True, exist_ok=True)
+(out / "index.html").write_text(html, encoding="utf-8")
