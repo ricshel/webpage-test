@@ -229,13 +229,37 @@ predictions = score_bottom3(actual, predictions)
 predictions = score_cups_simple(actual, predictions)
 predictions = score_awards_simple(actual, predictions)
 
-from pathlib import Path
-
-def render_html(predictions):
+def render_html(predictions, actual):
+    # leaderboard rows (integer scores)
     rows = "\n".join(
         f"<tr><td>{p['name']}</td><td style='text-align:right'>{int(p['score'])}</td></tr>"
         for p in predictions
     )
+
+    # actual: Top 6
+    top6_rows = "\n".join(
+        f"<tr><td style='text-align:right'>{i+1}</td><td>{team}</td></tr>"
+        for i, team in enumerate(actual.get("top6", []))
+    )
+
+    # actual: Bottom 3
+    bottom3_rows = "\n".join(
+        f"<tr><td style='text-align:right'>{i+1}</td><td>{team}</td></tr>"
+        for i, team in enumerate(actual.get("bottom3", []))
+    )
+
+    # actual: Cups (winner / runner-up)
+    cups_rows = "\n".join(
+        f"<tr><td>{cup}</td><td>{res.get('winner','')}</td><td>{res.get('runner_up','')}</td></tr>"
+        for cup, res in actual.get("cups", {}).items()
+    )
+
+    # actual: Awards
+    awards_rows = "\n".join(
+        f"<tr><td>{award}</td><td>{winner}</td></tr>"
+        for award, winner in actual.get("awards", {}).items()
+    )
+
     rules = """
     <section style="margin-top:24px">
       <h2 style="margin:0 0 8px;font-size:18px">Scoring Rules</h2>
@@ -247,12 +271,52 @@ def render_html(predictions):
       </ul>
     </section>
     """
+
+    actual_html = f"""
+    <section style="margin-top:28px">
+      <h2 style="margin:0 0 8px;font-size:18px">Actual Results</h2>
+
+      <h3 style="margin:12px 0 6px;font-size:16px">Top 6</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead><tr><th style="text-align:right;width:60px">Pos</th><th>Team</th></tr></thead>
+        <tbody>
+          {top6_rows}
+        </tbody>
+      </table>
+
+      <h3 style="margin:12px 0 6px;font-size:16px">Bottom 3</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead><tr><th style="text-align:right;width:60px">Pos</th><th>Team</th></tr></thead>
+        <tbody>
+          {bottom3_rows}
+        </tbody>
+      </table>
+
+      <h3 style="margin:12px 0 6px;font-size:16px">Cups</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;margin-bottom:10px">
+        <thead><tr><th>Cup</th><th>Winner</th><th>Runner-up</th></tr></thead>
+        <tbody>
+          {cups_rows}
+        </tbody>
+      </table>
+
+      <h3 style="margin:12px 0 6px;font-size:16px">Awards</h3>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
+        <thead><tr><th>Award</th><th>Winner</th></tr></thead>
+        <tbody>
+          {awards_rows}
+        </tbody>
+      </table>
+    </section>
+    """
+
     return f"""<!doctype html>
 <html lang="en">
 <meta charset="utf-8">
 <title>Predictions — Scores</title>
 <body style="font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial;max-width:760px;margin:40px auto;padding:0 16px">
   <h1 style="margin:0 0 12px">Predictions — Scores</h1>
+
   <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%">
     <thead>
       <tr>
@@ -264,12 +328,14 @@ def render_html(predictions):
       {rows}
     </tbody>
   </table>
+
   {rules}
+  {actual_html}
 </body>
 </html>"""
 
-# after computing your scores:
-# ranked = score_everything(actual, predictions)  # produce final list with p["score"] as a number
-html = render_html(predictions)  # or use `ranked` if you sorted already
-Path("dist").mkdir(exist_ok=True)
-Path("dist/index.html").write_text(html, encoding="utf-8")
+# usage after computing:
+# ranked = score_everything(actual, predictions)  # your pipeline
+# html = render_html(ranked, actual)
+# Path("dist").mkdir(exist_ok=True)
+# Path("dist/index.html").write_text(html, encoding="utf-8")
