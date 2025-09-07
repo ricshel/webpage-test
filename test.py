@@ -27,11 +27,11 @@ predictions = [
         "top6": ["manchester city", "liverpool", "chelsea", "manchester united", "newcastle", "arsenal"],
         "bottom3": ["brentford", "sunderland", "burnley"],
         "cups": {
-            "fa cup": "manchester united",
-            "europa league": "",
-            "carabao cup": "",
-            "champions league": "",
-            "conference league": "",
+            "fa cup": "liverpool",
+            "europa league": "aston villa",
+            "carabao cup": "manchester united",
+            "champions league": "manchester city",
+            "conference league": "aek athens",
             },
         "awards": {
             "golden boot": "haaland",
@@ -43,7 +43,7 @@ predictions = [
     },
     {
         "name": "Hickey",
-        "top6": [ "liverpool", "manchester city", "arsenal" "chelsea", "villa", "manchester united" ],
+        "top6": [ "liverpool", "manchester city", "arsenal", "chelsea", "villa", "manchester united" ],
         "bottom3": ["burnley", "sunderland", "leeds"],
         "cups": {
             "fa cup": "liverpool",
@@ -138,7 +138,7 @@ predictions = [
             "liverpool",
             "arsenal",
             "chelsea",
-            "villa"
+            "villa",
             "spurs",
             ],
         "bottom3": [ "wolves", "sunderland", "burnley" ],
@@ -194,7 +194,7 @@ predictions = [
             "arsenal",
             "chelsea",
             "manchester city",
-            "villa"
+            "villa",
             "nottingham forest",
             ],
         "bottom3": [
