@@ -242,7 +242,7 @@ def render_single_table(predictions, actual, include_actual=True, actual_label="
             now = datetime.now(_TZ)
         else:
             now = datetime.utcnow()
-        updated_at = now.strftime("%a %R %v").strip()
+        updated_at = now.strftime("%a %R, %d-%B-%Y").strip()
 
     # column sets (use actual keys for consistent ordering)
     cup_cols = list(actual.get("cups", {}).keys())
