@@ -16,7 +16,7 @@ actual = {
     "awards": {
         "golden boot": "haaland",
         "most assists": "grealish",
-        "clean sheets": "pope",
+        "clean sheets": "raya",
         "first manager sacked": "santo",
     },
 }
