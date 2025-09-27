@@ -3,8 +3,8 @@ from pathlib import Path
 from datetime import datetime
 
 actual = {
-    "top6": ["liverpool", "arsenal", "spurs",  "bournemouth", "crystal palace", "chelsea"],
-    "bottom3": ["west ham", "villa", "wolves"],
+    "top6": ["liverpool", "crystal palace",  "bournemouth", "manchester city", "spurs"],
+    "bottom3": ["villa", "west ham", wolves"],
     "cups": {
         "fa cup":           {"winner": "placeholder", "runner_up": "placeholder"},
         "europa league":    {"winner": "placeholder", "runner_up": "placeholder"},
