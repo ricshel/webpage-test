@@ -4,7 +4,7 @@ from datetime import datetime
 
 actual = {
     "top6": ["liverpool", "crystal palace", "spurs", "sunderland", "bournemouth", "manchester city"],
-    "bottom3": ["villa", "west ham", "wolves"],
+    "bottom3": ["burnley", "west ham", "wolves"],
     "cups": {
         "fa cup":           {"winner": "placeholder", "runner_up": "placeholder"},
         "europa league":    {"winner": "placeholder", "runner_up": "placeholder"},
